@@ -1,5 +1,6 @@
 package com.gevorgyan.partner;
 
+import com.gevorgyan.partner.exception.PartnerInvalidException;
 import com.gevorgyan.partner.exception.PartnerNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,11 @@ public class PartnerController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public Partner createPartner(@RequestBody Partner partner) {
-        return partnerService.createPartner(partner);
+        try {
+            return partnerService.createPartner(partner);
+        } catch (PartnerInvalidException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")

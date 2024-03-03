@@ -1,7 +1,9 @@
 package com.gevorgyan.partner;
 
+import com.gevorgyan.partner.exception.PartnerInvalidException;
 import com.gevorgyan.partner.exception.PartnerNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +22,12 @@ public class PartnerService {
                 .orElseThrow(() -> new PartnerNotFoundException("Partner with id: " + id + " does not exists."));
     }
 
-    public Partner createPartner(Partner partner) {
-        return partnerRepository.save(partner);
+    public Partner createPartner(Partner partner) throws PartnerInvalidException {
+        try {
+            return partnerRepository.save(partner);
+        } catch (DataIntegrityViolationException e){
+            throw new PartnerInvalidException("Partner is not well defined");
+        }
     }
 
     public Partner updatePartner(Long id, Partner partner) throws PartnerNotFoundException {

@@ -1,5 +1,6 @@
 package com.gevorgyan.partner;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -20,6 +21,7 @@ class Partner {
     private Long id;
 
     private String companyName;
+    @Column(unique=true)
     private String ref;
     private Locale locale;
     private ZonedDateTime expires;
