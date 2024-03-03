@@ -1,8 +1,10 @@
 package com.gevorgyan.partner;
 
+import com.gevorgyan.partner.exception.PartnerNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -19,7 +21,11 @@ public class PartnerController {
 
     @GetMapping("/{id}")
     public Partner getPartner(@PathVariable Long id){
-        return partnerService.getPartnerById(id);
+        try {
+            return partnerService.getPartnerById(id);
+        } catch (PartnerNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @PostMapping
@@ -30,12 +36,20 @@ public class PartnerController {
 
     @PutMapping("/{id}")
     public Partner updatePartner(@PathVariable Long id, @RequestBody Partner partner){
-       return partnerService.updatePartner(id, partner);
+        try{
+            return partnerService.updatePartner(id, partner);
+        } catch (PartnerNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deletePartner(@PathVariable Long id){
-        partnerService.deletePartner(id);
+        try {
+            partnerService.deletePartner(id);
+        } catch (PartnerNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 }
